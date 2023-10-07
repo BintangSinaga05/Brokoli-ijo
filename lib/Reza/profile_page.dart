@@ -32,25 +32,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: double.infinity,
                 decoration:
                     const BoxDecoration(color: Color.fromARGB(255, 58, 10, 51)),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 200,
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Adrianus Silalahi",
-                            style: TextStyle(
+                        Text('${provTugas2.username}',
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold)),
-                        Text(
+                        const Text(
                           "+62895-1232-6689",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         )
                       ],
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         TextField(
                           style: const TextStyle(color: Colors.white),
                           controller: TextEditingController(
-                            text: "adrianus766@gmail.com",
+                            text: "${provTugas2.email}",
                           ),
                           decoration: const InputDecoration(
                               labelText: 'YOUR EMAIL',

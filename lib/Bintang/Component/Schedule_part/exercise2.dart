@@ -135,7 +135,7 @@ class _Exercise2State extends State<Exercise2> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     Image.asset(
