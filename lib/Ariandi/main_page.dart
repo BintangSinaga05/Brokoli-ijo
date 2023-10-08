@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
     final provTugas2 = context.watch<ProviderTugas2>();
     final List body = [
       const SchedulePage(),
-      const TrainerPage(),
+      TrainerPage(),
       const MemberPage(),
       const SuplemenPage(),
     ];

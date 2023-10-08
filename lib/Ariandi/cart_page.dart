@@ -10,6 +10,9 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xffb28242c),
@@ -18,57 +21,61 @@ class _CartScreenState extends State<CartScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                )),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
             const Text(
               "C A R T",
               style: TextStyle(color: Colors.white),
             ),
             IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                )),
+              onPressed: () {},
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
       body: Container(
         child: Column(
           children: [
-            //Main
+            // Main
             Expanded(
-                child: Container(
-              decoration: const BoxDecoration(color: Colors.black87),
-              child: Column(
-                children: [
-                  //Produk
-                  Container(
-                    decoration: BoxDecoration(color: Colors.grey[700]),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.check_box_outline_blank,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 120,
-                              height: 90,
-                              child: Image.network(
-                                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY-xFPkslDc7wPZaCSZoKF_ZvKe4EIGA6jQQ&usqp=CAU",
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.black87),
+                child: Column(
+                  children: [
+                    // Produk
+                    Container(
+                      decoration: BoxDecoration(color: Colors.grey[700]),
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenHeight * 0.01,
+                        horizontal: screenWidth * 0.01,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.check_box_outline_blank,
+                                color: Colors.white,
                               ),
-                            ),
-                            const SizedBox(
+                              SizedBox(
+                                width: screenWidth * 0.3,
+                                height: screenHeight * 0.15,
+                                child: Image.network(
+                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY-xFPkslDc7wPZaCSZoKF_ZvKe4EIGA6jQQ&usqp=CAU",
+                                ),
+                              ),
+                              const SizedBox(
                                 width: 125,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,48 +84,56 @@ class _CartScreenState extends State<CartScreen> {
                                       "NTech Whey 500gr",
                                       style: TextStyle(color: Colors.white),
                                     ),
-                                    Text("Rp 440.000",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold))
+                                    Text(
+                                      "Rp 440.000",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ],
-                                )),
-                          ],
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Icon(
-                              Icons.remove_circle,
-                              color: Colors.white,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "1",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Icon(
-                              Icons.add_circle,
-                              color: Colors.white,
-                            ),
-                          ],
-                        )
-                      ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Icon(
+                                Icons.remove_circle,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: screenWidth * 0.02,
+                              ),
+                              const Text(
+                                "1",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(
+                                width: screenWidth * 0.02,
+                              ),
+                              const Icon(
+                                Icons.add_circle,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            )),
+            ),
 
-            //Total belanjaan
+            // Total belanjaan
             Container(
               decoration: const BoxDecoration(color: Color(0xffb28242c)),
-              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.05,
+                vertical: screenHeight * 0.03,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -129,9 +144,13 @@ class _CartScreenState extends State<CartScreen> {
                         "Total",
                         style: TextStyle(color: Colors.grey[350]),
                       ),
-                      const Text("Rp 440.000",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold))
+                      const Text(
+                        "Rp 440.000",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   Center(
@@ -146,15 +165,15 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       onPressed: () {},
                     ),
-                  )
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        showSelectedLabels: false, //selected item
+        showSelectedLabels: false, // selected item
         showUnselectedLabels: false,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.black,
@@ -162,18 +181,27 @@ class _CartScreenState extends State<CartScreen> {
         currentIndex: 0,
         items: const [
           BottomNavigationBarItem(
-              icon: Center(
-                  child: Icon(Icons.calendar_month_sharp, color: Colors.white)),
-              label: "adsasd"),
+            icon: Center(
+              child: Icon(Icons.calendar_month_sharp, color: Colors.white),
+            ),
+            label: "adsasd",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person, color: Colors.white), label: ""),
+            icon: Icon(Icons.person, color: Colors.white),
+            label: "",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.home, color: Colors.white), label: ""),
+            icon: Icon(Icons.home, color: Colors.white),
+            label: "",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.wallet_membership, color: Colors.white),
-              label: ""),
+            icon: Icon(Icons.wallet_membership, color: Colors.white),
+            label: "",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart, color: Colors.white), label: ""),
+            icon: Icon(Icons.shopping_cart, color: Colors.white),
+            label: "",
+          ),
         ],
       ),
     );
