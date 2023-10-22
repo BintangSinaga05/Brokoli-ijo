@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../Bintang/Provider/Provider.dart';
 import '../Reza/trainer_page.dart';
-import 'member_page.dart';
+import '../Frans/member_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
