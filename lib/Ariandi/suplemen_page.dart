@@ -1,4 +1,4 @@
-import 'cart_page.dart';
+import 'package:basic/Page/cart_page.dart';
 import 'package:flutter/material.dart';
 
 class SuplemenPage extends StatefulWidget {
@@ -9,6 +9,51 @@ class SuplemenPage extends StatefulWidget {
 }
 
 class _SuplemenPageState extends State<SuplemenPage> {
+  List<Map<String, dynamic>> suplemenList = [
+    {
+      "name": "Evolene BCAA Branch Chain 350 Gram",
+      "category": "BCCA",
+      "price": "Rp 440.000",
+      "assetPath": "assets/suplemen2.jpeg",
+    },
+    {
+      "name": "M1 Muscle First Gold Pro Creatine 350 Gram",
+      "category": "Creatine",
+      "price": "Rp 550.000",
+      "assetPath": "assets/suplemen1.jpeg",
+    },
+    {
+      "name": "Universal Fat Burner 55 Tablet",
+      "category": "Fat Burner",
+      "price": "Rp 440.000",
+      "assetPath": "assets/suplemen3.jpeg",
+    },
+    {
+      "name": "Evolene Evomass Gainer 2 lbs 912 Gram",
+      "category": "Gainer",
+      "price": "Rp 193.000",
+      "assetPath": "assets/suplemen4.jpeg",
+    },
+  ];
+
+  TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> filteredSuplemenList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    filteredSuplemenList = suplemenList;
+  }
+
+  void filterSuplemen(String query) {
+    setState(() {
+      filteredSuplemenList = suplemenList
+          .where((suplemen) =>
+              suplemen['name'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -24,7 +69,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
           children: [
             Center(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(10, screenHeight * 0.02, 10, 0),
+                padding: EdgeInsets.fromLTRB(10, screenHeight * 0.01, 10, 0),
                 child: Text(
                   "Suplemen Shop",
                   style: TextStyle(
@@ -35,6 +80,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
                 ),
               ),
             ),
+
             // Widget Search
             Container(
               margin: EdgeInsets.fromLTRB(
@@ -44,7 +90,11 @@ class _SuplemenPageState extends State<SuplemenPage> {
                 screenHeight * 0.02,
               ),
               child: TextField(
+                style: const TextStyle(color: Colors.white),
+                controller: searchController,
+                onChanged: filterSuplemen,
                 decoration: InputDecoration(
+                  fillColor: Colors.white,
                   labelText: 'Search',
                   prefixIcon: const Icon(
                     Icons.search,
@@ -65,42 +115,13 @@ class _SuplemenPageState extends State<SuplemenPage> {
               child: Scrollbar(
                 child: ListView(
                   padding: const EdgeInsets.all(0),
-                  children: [
-                    _buildSupplementItem(
-                      "Evolene BCAA Branch Chain 350 Gram",
-                      "BCCA",
-                      "Rp 440.000",
-                      "assets/suplemen2.jpeg",
-                      screenWidth,
-                    ),
-                    _buildSupplementItem(
-                      "M1 Muscle First Gold Pro Creatine 350 Gram",
-                      "Creatine",
-                      "Rp 550.000",
-                      "assets/suplemen1.jpeg",
-                      screenWidth,
-                    ),
-                    _buildSupplementItem(
-                      "Universal Fat Burner 55 Tablet",
-                      "Fat Burner",
-                      "Rp 440.000",
-                      "assets/suplemen3.jpeg",
-                      screenWidth,
-                    ),
-                    _buildSupplementItem(
-                      "Evolene Evomass Gainer 2 lbs 912 Gram",
-                      "Gainer",
-                      "Rp 193.000",
-                      "assets/suplemen4.jpeg",
-                      screenWidth,
-                    ),
-                    // Tambahkan item lain jika diperlukan
-                  ],
+                  children:
+                      _buildSupplementItems(filteredSuplemenList, screenWidth),
                 ),
               ),
             ),
             SizedBox(
-              height: screenHeight * 0.01,
+              height: screenHeight * 0.001,
             ),
             ElevatedButton(
               onPressed: () {
@@ -118,6 +139,19 @@ class _SuplemenPageState extends State<SuplemenPage> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildSupplementItems(
+      List<Map<String, dynamic>> suplemenList, double screenWidth) {
+    return suplemenList.map((suplemen) {
+      return _buildSupplementItem(
+        suplemen['name'],
+        suplemen['category'],
+        suplemen['price'],
+        suplemen['assetPath'],
+        screenWidth,
+      );
+    }).toList();
   }
 
   Widget _buildSupplementItem(
