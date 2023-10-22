@@ -1,7 +1,7 @@
 import 'package:basic/Bintang/schedule_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../Ariandi/member_page.dart';
+import '../Frans/member_page.dart';
 import '../Ariandi/suplemen_page.dart';
 import '../Bintang/Provider/Provider.dart';
 import '../Frans/App_bar/app_bar_screen.dart';
