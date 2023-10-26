@@ -1,13 +1,13 @@
+import 'package:basic/Page/sign%20up_page.dart';
+import 'package:basic/Provider/Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'Bintang/Provider/Provider.dart';
-import 'Rizki/sign up_page.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
     //Provider tugas-2
-    ChangeNotifierProvider(create: (_) => ProviderTugas2())
+    ChangeNotifierProvider(create: (_) => ProviderTugas2()),
+    ChangeNotifierProvider(create: (_) => ThemeProvider()),
   ], child: const MyApp()));
 }
 
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffb28242c)),
         useMaterial3: true,
       ),
       home: const SignUp(),
