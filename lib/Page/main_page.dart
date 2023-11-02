@@ -1,7 +1,7 @@
 import 'package:basic/App_bar/app_bar_screen.dart';
 import 'package:basic/Bottom_nav/bottom_navigation_screen.dart';
 import 'package:basic/Drawer/drawer.dart';
-import 'package:basic/Page/member_page.dart';
+import 'package:basic/Page/member_page/member_page.dart';
 import 'package:basic/Page/schedule_page.dart';
 import 'package:basic/Page/suplemen_page.dart';
 import 'package:basic/Page/trainer_page.dart';

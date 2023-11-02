@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:basic/style/style.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -89,7 +90,7 @@ class _TrainerPageState extends State<TrainerPage> {
           Center(
             child: Container(
               padding: const EdgeInsets.all(5),
-              color: const Color(0xFF18141D),
+              color: colorbase,
               child: TextField(
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -119,7 +120,7 @@ class _TrainerPageState extends State<TrainerPage> {
           ),
           Expanded(
             child: Container(
-              decoration: const BoxDecoration(color: Color(0xFF18141D)),
+              decoration: const BoxDecoration(color: colorbase),
               child: ListView.builder(
                 itemCount:
                     searchText.isEmpty ? trainers.length : searchResults.length,

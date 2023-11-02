@@ -1,4 +1,5 @@
 import 'package:basic/Page/cart_page.dart';
+import 'package:basic/style/style.dart';
 import 'package:flutter/material.dart';
 
 class SuplemenPage extends StatefulWidget {
@@ -62,7 +63,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFF18141D),
+          color: colorbase,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -1,6 +1,5 @@
-// ignore: file_names
-import 'package:basic/Page/login_page.dart';
-import 'package:basic/Page/register_page.dart';
+import 'package:basic/Page/Login&Register_page/login_page.dart';
+import 'package:basic/Page/Login&Register_page/register_page.dart';
 import 'package:flutter/material.dart';
 
 class SignUp extends StatelessWidget {

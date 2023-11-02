@@ -1,9 +1,17 @@
+import 'package:basic/Page/sign%20in_page.dart';
 import 'package:basic/Page/sign%20up_page.dart';
 import 'package:basic/Provider/Provider.dart';
+import 'package:basic/TestFirebase/pertemuan06_screen.dart';
+import 'package:basic/minggu_7/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+
   runApp(MultiProvider(providers: [
     //Provider tugas-2
     ChangeNotifierProvider(create: (_) => ProviderTugas2()),

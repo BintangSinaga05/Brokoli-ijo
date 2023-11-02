@@ -1,6 +1,6 @@
 {
-    "name": "uas_back_end",
-    "short_name": "uas_back_end",
+    "name": "strongfit",
+    "short_name": "strongfit",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

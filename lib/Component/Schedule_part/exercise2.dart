@@ -253,6 +253,7 @@ class _Exercise2State extends State<Exercise2> {
                 ),
               ),
               Container(
+                width: 600,
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.white),
                     borderRadius: const BorderRadius.all(Radius.circular(10))),
@@ -267,7 +268,7 @@ class _Exercise2State extends State<Exercise2> {
                       width: 50,
                     ),
                     const SizedBox(
-                      width: 25,
+                      width: 20,
                     ),
                     const Text(
                       "Shoulder Press",

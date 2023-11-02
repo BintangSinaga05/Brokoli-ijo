@@ -2,6 +2,7 @@ import 'package:basic/Component/Schedule_part/cardio.dart';
 import 'package:basic/Component/Schedule_part/exercise1.dart';
 import 'package:basic/Component/Schedule_part/exercise2.dart';
 import 'package:basic/Component/Schedule_part/rest.dart';
+import 'package:basic/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class _SchedulePageState extends State<SchedulePage> {
     var day = provTugas2.dataCurrentdate.weekday;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(color: Color(0xFF18141D)),
+        decoration: const BoxDecoration(color: colorbase),
         height: double.infinity,
         width: double.infinity,
         child: Column(
