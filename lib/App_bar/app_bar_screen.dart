@@ -3,6 +3,7 @@ import 'package:basic/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
 
 class AppBarScreen extends StatefulWidget implements PreferredSizeWidget {
   const AppBarScreen({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class AppBarScreen extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _AppBarScreenState extends State<AppBarScreen> {
+  String temperature = '';
+  String city = '';
   late DateTime selectedDate; // Tambahkan variabel selectedDate
 
   @override
@@ -22,6 +25,28 @@ class _AppBarScreenState extends State<AppBarScreen> {
     super.initState();
     selectedDate =
         DateTime.now(); // Inisialisasi selectedDate ke DateTime.now()
+
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    try {
+      final response = await Dio().get(
+          'https://openweathermap.org/data/2.5/weather?id=1214520&appid=439d4b804bc8187953eb36d2a8c26a02');
+      if (response.statusCode == 200) {
+        final temperatureValue =
+            response.data['main']['temp'].toStringAsFixed(1);
+        final cityValue = response.data['name'];
+        setState(() {
+          temperature = '$temperatureValue °C';
+          city = '$cityValue';
+        });
+      } else {
+        print('Failed to load weather data');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
   }
 
   @override
@@ -38,7 +63,7 @@ class _AppBarScreenState extends State<AppBarScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Halo ${provTugas2.username}!",
+            "Suhu saat ini Di $city $temperature",
             style: const TextStyle(color: Colors.white38, fontSize: 18),
           ),
           Text(
