@@ -1,6 +1,8 @@
 import 'package:basic/Page/Login&Register_page/login_page.dart';
 import 'package:basic/Page/main_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'auth.dart';
 
 class Register extends StatefulWidget {
@@ -9,25 +11,26 @@ class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
 }
- 
+
 class _RegisterState extends State<Register> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final auth = AuthFirebase();
 
-  Future<String?>? _onSignUp() {
-    final email = emailController.text;
-    final password = passwordController.text;
-    return auth.signUp(email, password).then((value) {
+  Future<String?>? _onSignUp() async {
+    try {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      await auth.signUp(email, password);
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
-      final snackbar = SnackBar(
-        content: const Text("Sign Up Successful"),
-        action: SnackBarAction(label: 'OK', onPressed: () {}),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackbar);
-      return null;
-    });
+      return 'Pendaftaran berhasil';
+    } on FirebaseAuthException catch (error) {
+      Fluttertoast.showToast(
+          msg: error.message ?? 'An error occured', gravity: ToastGravity.TOP);
+    }
+    return null;
   }
 
   @override
@@ -67,7 +70,7 @@ class _RegisterState extends State<Register> {
               // ),
               const SizedBox(height: 16.0),
               TextField(
-                controller: emailController,
+                controller: _emailController,
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Email',
@@ -85,7 +88,7 @@ class _RegisterState extends State<Register> {
               // ),
               // const SizedBox(height: 16.0),
               TextField(
-                controller: passwordController,
+                controller: _passwordController,
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
                   labelText: 'Password',
@@ -127,8 +130,17 @@ class _RegisterState extends State<Register> {
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {
-                    _onSignUp();
+                  onPressed: () async {
+                    String? registerStatus = await _onSignUp();
+                    if (registerStatus != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(registerStatus),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                    // Melakukan login menggunakan AuthFirebase
                   },
                   child: const Text(
                     'Register',

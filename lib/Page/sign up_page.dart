@@ -1,14 +1,20 @@
 import 'package:basic/Page/Login&Register_page/login_page.dart';
 import 'package:basic/Page/Login&Register_page/register_page.dart';
+import 'package:basic/Page/main_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignUp extends StatelessWidget {
-  const SignUp({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
@@ -28,19 +34,19 @@ class SignUp extends StatelessWidget {
                   child: Text(
                     "Welcome to Strongfit",
                     style: TextStyle(
-                      fontSize: 0.08 * screenWidth, // Responsif
+                      fontSize: 0.08 * screenWidth,
                       color: Colors.white,
                       decoration: TextDecoration.none,
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 0.04 * screenWidth, // Responsif
+                  height: 0.04 * screenWidth,
                 ),
                 Text(
                   "Chose your favorite fitness trainer",
                   style: TextStyle(
-                      fontSize: 0.04 * screenWidth, // Responsif
+                      fontSize: 0.04 * screenWidth,
                       color: Colors.white,
                       decoration: TextDecoration.none,
                       fontWeight: FontWeight.w400),
@@ -48,43 +54,48 @@ class SignUp extends StatelessWidget {
                 Text(
                   "and never have a bad workout again.",
                   style: TextStyle(
-                      fontSize: 0.04 * screenWidth, // Responsif
+                      fontSize: 0.04 * screenWidth,
                       color: Colors.white,
                       decoration: TextDecoration.none,
                       fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
-                  height: 0.04 * screenWidth, // Responsif
+                  height: 0.04 * screenWidth,
                 ),
 
                 // Button "Sign Up"
                 SizedBox(
-                  width: 0.70 * screenWidth, // Responsif
-                  height: 0.12 * screenWidth, // Responsif
+                  width: 0.70 * screenWidth,
+                  height: 0.12 * screenWidth,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Register()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Register(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shadowColor: Colors.amber,
-                        elevation: 3,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
+                      backgroundColor: Colors.white,
+                      shadowColor: Colors.amber,
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                     child: Text(
                       "Sign Up",
                       style: TextStyle(
-                          fontSize: 0.05 * screenWidth, // Responsif
-                          color: Colors.black,
-                          fontWeight: FontWeight.w900),
+                        fontSize: 0.05 * screenWidth,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 0.015 * screenWidth, // Responsif
+                  height: 0.015 * screenWidth,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -98,9 +109,11 @@ class SignUp extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const Login()));
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
                       },
                       child: const Text(
                         'Sign in',
@@ -112,7 +125,7 @@ class SignUp extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  height: 0.06 * screenWidth, // Responsif
+                  height: 0.06 * screenWidth,
                 ),
               ],
             ),

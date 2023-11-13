@@ -1,3 +1,5 @@
+import 'package:basic/Page/Login&Register_page/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Page/profile_page.dart';
 
@@ -9,6 +11,18 @@ class Drawerku extends StatefulWidget {
 }
 
 class _DrawerkuState extends State<Drawerku> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  @override
+  Future<void> _handleSignOut() async {
+    try {
+      await _auth.signOut();
+      // Setelah logout berhasil, lakukan tindakan yang sesuai, seperti kembali ke layar login
+    } catch (e) {
+      print('Error during sign out: $e');
+      // Tampilkan pesan kesalahan atau lakukan tindakan yang sesuai sesuai kebutuhan aplikasi Anda
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,6 +51,22 @@ class _DrawerkuState extends State<Drawerku> {
                     builder: (context) => const ProfileScreen(),
                   ),
                 );
+              },
+            ),
+            const Expanded(child: SizedBox()),
+            ListTile(
+              title: const Text(
+                "Log Out",
+                style: TextStyle(color: Colors.white),
+              ),
+              leading: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              onTap: () async {
+                await _handleSignOut();
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((context) => const Login())));
               },
             ),
           ],

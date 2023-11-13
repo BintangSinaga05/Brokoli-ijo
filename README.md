@@ -1,4 +1,4 @@
-# basic
+# strongfit
 
 A new Flutter project.
 
