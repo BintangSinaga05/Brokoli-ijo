@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'auth.dart';
 import '../main_page.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,24 +17,19 @@ class _LoginState extends State<Login> {
   bool isDataValid = true;
   final auth = AuthFirebase();
 
-  Future<String?>? _loginUser() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    return auth.login(email, password).then((value) {
-      if (value != null) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const MainPage()));
-      } else {
-        final snackbar = SnackBar(
-          content: const Text('Login Failed, user not Found'),
-          action: SnackBarAction(label: 'OK', onPressed: () {}),
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackbar);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const Login()));
-      }
-      return null;
-    });
+  Future<String?> _loginUser() async {
+    try {
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      await auth.login(email, password);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const MainPage()));
+      return 'login berhasil';
+    } on FirebaseAuthException catch (error) {
+      Fluttertoast.showToast(
+          msg: error.message ?? "An Error occured", gravity: ToastGravity.TOP);
+    }
+    return null;
   }
 
   @override
@@ -110,9 +107,16 @@ class _LoginState extends State<Login> {
                               height: screenHeight * 0.06,
                               child: ElevatedButton(
                                 onPressed: () async {
+                                  String? loginStatus = await _loginUser();
+                                  if (loginStatus != null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(loginStatus),
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
                                   // Melakukan login menggunakan AuthFirebase
-
-                                  _loginUser();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   foregroundColor: Colors.white,
