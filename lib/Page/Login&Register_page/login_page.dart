@@ -1,3 +1,4 @@
+import 'package:basic/Page/sign%20up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'auth.dart';
@@ -16,19 +17,30 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   bool isDataValid = true;
   final auth = AuthFirebase();
+  bool isLoggingIn = false;
 
   Future<String?> _loginUser() async {
+    setState(() {
+      isLoggingIn = true; // Set state menjadi true saat login dimulai
+    });
+
     try {
       final email = _emailController.text;
       final password = _passwordController.text;
       await auth.login(email, password);
-      Navigator.push(
+
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
       return 'login berhasil';
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(
           msg: error.message ?? "An Error occured", gravity: ToastGravity.TOP);
+    } finally {
+      setState(() {
+        isLoggingIn = false; // Set state menjadi false setelah login selesai
+      });
     }
+
     return null;
   }
 
@@ -103,40 +115,50 @@ class _LoginState extends State<Login> {
                         Column(
                           children: [
                             SizedBox(
-                              width: screenWidth * 0.7,
-                              height: screenHeight * 0.06,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  String? loginStatus = await _loginUser();
-                                  if (loginStatus != null) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(loginStatus),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
-                                  }
-                                  // Melakukan login menggunakan AuthFirebase
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.white,
-                                ),
-                                child: const Text(
-                                  'Sign',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
+                                width: screenWidth * 0.7,
+                                height: screenHeight * 0.06,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    String? loginStatus = await _loginUser();
+                                    if (loginStatus != null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content: Text(loginStatus),
+                                          duration: const Duration(seconds: 10),
+                                        ),
+                                      );
+                                    }
+                                    // Melakukan login menggunakan AuthFirebase
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.white,
                                   ),
-                                ),
-                              ),
-                            ),
+                                  child:
+                                      isLoggingIn // Tampilkan CircularProgressIndicator jika sedang login
+                                          ? const CircularProgressIndicator(
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.black),
+                                            )
+                                          : const Text(
+                                              'Sign',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                )),
                             const SizedBox(
                               height: 20,
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SignUp()));
                               },
                               child: const Text(
                                 "Back",

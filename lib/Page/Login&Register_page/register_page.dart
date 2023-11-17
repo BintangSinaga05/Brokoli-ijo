@@ -16,19 +16,29 @@ class _RegisterState extends State<Register> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final auth = AuthFirebase();
+  bool isRegistering = false;
 
-  Future<String?>? _onSignUp() async {
+  Future<String?> _onSignUp() async {
+    setState(() {
+      isRegistering = true;
+    });
+
     try {
       final email = _emailController.text;
       final password = _passwordController.text;
       await auth.signUp(email, password);
 
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
       return 'Pendaftaran berhasil';
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(
           msg: error.message ?? 'An error occured', gravity: ToastGravity.TOP);
+    } finally {
+      setState(() {
+        isRegistering =
+            false; // Set state menjadi false setelah pendaftaran selesai
+      });
     }
     return null;
   }
@@ -140,18 +150,29 @@ class _RegisterState extends State<Register> {
                         ),
                       );
                     }
-                    // Melakukan login menggunakan AuthFirebase
+                    // Melakukan pendaftaran menggunakan AuthFirebase
                   },
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(fontSize: 20, color: Colors.black),
-                  ),
+                  child:
+                      isRegistering // Tampilkan CircularProgressIndicator jika sedang pendaftaran
+                          ? const CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.black),
+                            )
+                          : const Text(
+                              'Register',
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.black),
+                            ),
                 ),
               ),
               const SizedBox(height: 16.0),
               TextButton(
                   onPressed: () {
-                    // Tambahkan logika untuk tombol "Already have an account" di sini
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Login(),
+                        ));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -164,7 +185,7 @@ class _RegisterState extends State<Register> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const Login()));

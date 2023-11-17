@@ -1,7 +1,6 @@
 import 'package:basic/Page/Login&Register_page/login_page.dart';
 import 'package:basic/Page/Login&Register_page/register_page.dart';
-import 'package:basic/Page/main_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
 class SignUp extends StatefulWidget {
@@ -69,7 +68,7 @@ class _SignUpState extends State<SignUp> {
                   height: 0.12 * screenWidth,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const Register(),
@@ -108,7 +107,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const Login(),

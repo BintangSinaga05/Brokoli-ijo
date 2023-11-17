@@ -12,7 +12,6 @@ class Drawerku extends StatefulWidget {
 
 class _DrawerkuState extends State<Drawerku> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  @override
   Future<void> _handleSignOut() async {
     try {
       await _auth.signOut();

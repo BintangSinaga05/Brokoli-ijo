@@ -60,7 +60,7 @@ class SignIn extends StatelessWidget {
                       height: 0.1 * screenHeight, // Responsif
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const Login()));
@@ -96,7 +96,7 @@ class SignIn extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const Register()));
