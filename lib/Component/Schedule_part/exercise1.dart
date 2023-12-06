@@ -1,4 +1,4 @@
-import 'package:basic/Provider/Provider.dart';
+import 'package:basic/Provider/MyProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +106,7 @@ class _Exercise1State extends State<Exercise1> {
 
   @override
   Widget build(BuildContext context) {
-    final provTugas2 = context.watch<ProviderTugas2>();
+    final provTugas2 = context.watch<DataProfileProvider>();
     final picked = provTugas2.dataCurrentdate;
     final formatteddate = DateFormat("MMMM dd").format(picked);
     final now = DateTime.now();

@@ -6,7 +6,7 @@ import 'package:basic/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Provider/Provider.dart';
+import '../Provider/MyProvider.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -18,7 +18,7 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
-    final provTugas2 = context.watch<ProviderTugas2>();
+    final provTugas2 = context.watch<DataProfileProvider>();
     var day = provTugas2.dataCurrentdate.weekday;
     return Scaffold(
       body: Container(

@@ -1,9 +1,11 @@
 import 'package:basic/Page/Login&Register_page/login_page.dart';
 import 'package:basic/Page/main_page.dart';
+import 'package:basic/Provider/MyProvider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'auth.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -13,9 +15,11 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final TextEditingController _cityController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final auth = AuthFirebase();
+  final TextEditingController _username = TextEditingController();
+
   bool isRegistering = false;
 
   Future<String?> _onSignUp() async {
@@ -24,22 +28,42 @@ class _RegisterState extends State<Register> {
     });
 
     try {
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
       final email = _emailController.text;
       final password = _passwordController.text;
-      await auth.signUp(email, password);
+
+      UserCredential userCredential =
+          await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      String uid = userCredential.user?.uid ?? "";
+
+      context.read<DataProfileProvider>().setUid(uid);
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'username': _username.text,
+        'city': _cityController.text,
+        'email': email,
+      });
+
+      await firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
+
       return 'Pendaftaran berhasil';
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(
-          msg: error.message ?? 'An error occured', gravity: ToastGravity.TOP);
+          msg: error.message ?? 'Terjadi kesalahan', gravity: ToastGravity.TOP);
     } finally {
       setState(() {
-        isRegistering =
-            false; // Set state menjadi false setelah pendaftaran selesai
+        isRegistering = false;
       });
     }
+
     return null;
   }
 
@@ -70,15 +94,22 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              // TextField(
-              //   controller: _usernameController,
-              //   style: const TextStyle(color: Colors.white),
-              //   decoration: const InputDecoration(
-              //     labelText: 'Username',
-              //     labelStyle: TextStyle(color: Colors.white),
-              //   ),
-              // ),
-              const SizedBox(height: 16.0),
+              TextField(
+                controller: _username,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+              ),
+              TextField(
+                controller: _cityController,
+                style: const TextStyle(color: Colors.white),
+                decoration: const InputDecoration(
+                  labelText: 'City',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+              ),
               TextField(
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
@@ -88,15 +119,6 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              // TextField(
-              //   controller: _phonenumberController,
-              //   style: const TextStyle(color: Colors.white),
-              //   decoration: const InputDecoration(
-              //     labelText: 'Phone Number',
-              //     labelStyle: TextStyle(color: Colors.white),
-              //   ),
-              // ),
-              // const SizedBox(height: 16.0),
               TextField(
                 controller: _passwordController,
                 style: const TextStyle(color: Colors.white),
@@ -106,35 +128,6 @@ class _RegisterState extends State<Register> {
                 ),
                 obscureText: true,
               ),
-              const SizedBox(height: 16.0),
-              // TextField(
-              //   controller: _confPasswordController,
-              //   style: const TextStyle(color: Colors.white),
-              //   decoration: const InputDecoration(
-              //     labelText: 'Confirm Password',
-              //     labelStyle: TextStyle(color: Colors.white),
-              //   ),
-              //   obscureText: true,
-              // ),
-              // const SizedBox(height: 16.0),
-              // Row(
-              //   children: [
-              //     Checkbox(
-              //       value: _isChecked,
-              //       onChanged: (bool? value) {
-              //         setState(() {
-              //           _isChecked = value!;
-              //         });
-              //       },
-              //     ),
-              //     const Text(
-              //       'I agree to the terms and conditions',
-              //       style: TextStyle(
-              //         color: Colors.white,
-              //       ),
-              //     ),
-              //   ],
-              // ),
               const SizedBox(height: 16.0),
               SizedBox(
                 width: 300,
@@ -150,19 +143,16 @@ class _RegisterState extends State<Register> {
                         ),
                       );
                     }
-                    // Melakukan pendaftaran menggunakan AuthFirebase
                   },
-                  child:
-                      isRegistering // Tampilkan CircularProgressIndicator jika sedang pendaftaran
-                          ? const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.black),
-                            )
-                          : const Text(
-                              'Register',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
-                            ),
+                  child: isRegistering
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.black),
+                        )
+                      : const Text(
+                          'Register',
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                        ),
                 ),
               ),
               const SizedBox(height: 16.0),

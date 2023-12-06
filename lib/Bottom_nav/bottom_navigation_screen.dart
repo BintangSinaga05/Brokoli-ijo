@@ -1,4 +1,4 @@
-import 'package:basic/Provider/Provider.dart';
+import 'package:basic/Provider/MyProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +12,7 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
-    final provTugas2 = context.watch<ProviderTugas2>();
+    final provTugas2 = context.watch<DataProfileProvider>();
     return BottomNavigationBar(
       showSelectedLabels: false, //selected item
       showUnselectedLabels: false,

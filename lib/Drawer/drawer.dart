@@ -64,7 +64,7 @@ class _DrawerkuState extends State<Drawerku> {
               ),
               onTap: () async {
                 await _handleSignOut();
-                Navigator.of(context).push(
+                Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: ((context) => const Login())));
               },
             ),

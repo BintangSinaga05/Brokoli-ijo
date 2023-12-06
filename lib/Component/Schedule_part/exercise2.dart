@@ -1,6 +1,5 @@
-import 'package:basic/Provider/Provider.dart';
+import 'package:basic/Provider/MyProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +17,7 @@ class _Exercise2State extends State<Exercise2> {
   bool isTask1Completed = false;
   bool isTask2Completed = false;
   bool isTask3Completed = false;
+  DateTime? picked;
 
   @override
   void initState() {
@@ -26,6 +26,7 @@ class _Exercise2State extends State<Exercise2> {
     loadLastSavedDate();
     // Memeriksa status tugas dari SharedPreferences
     loadTaskStatus();
+    picked = DateTime.now();
   }
 
   Future<void> showAutoPopup(BuildContext context) async {
@@ -128,7 +129,7 @@ class _Exercise2State extends State<Exercise2> {
 
   @override
   Widget build(BuildContext context) {
-    final provTugas2 = context.watch<ProviderTugas2>();
+    final provTugas2 = context.watch<DataProfileProvider>();
     final picked = provTugas2.dataCurrentdate;
     final formatteddate = DateFormat("MMMM dd").format(picked);
     final now = DateTime.now();

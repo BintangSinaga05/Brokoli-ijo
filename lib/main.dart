@@ -1,5 +1,5 @@
 import 'package:basic/Page/sign%20up_page.dart';
-import 'package:basic/Provider/Provider.dart';
+import 'package:basic/Provider/MyProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,9 +10,8 @@ Future<void> main() async {
   runApp(const MyApp());
 
   runApp(MultiProvider(providers: [
-    //Provider tugas-2
-    ChangeNotifierProvider(create: (_) => ProviderTugas2()),
-    ChangeNotifierProvider(create: (_) => ThemeProvider()),
+    ChangeNotifierProvider(create: (_) => DataProfileProvider()),
+    ChangeNotifierProvider(create: (_) => SuplemenProvider())
   ], child: const MyApp()));
 }
 

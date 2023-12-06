@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:basic/Page/suplemen_page/model.dart';
+import 'package:basic/Page/suplemen_page/SuplemenModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,7 +15,6 @@ class Seller extends StatefulWidget {
 
 class _SellerState extends State<Seller> {
   File? _image;
-  final String _imageUrl = '';
   final TextEditingController _namasuplemen = TextEditingController();
   final TextEditingController _jenissuplemen = TextEditingController();
   final TextEditingController _hargasuplemen = TextEditingController();

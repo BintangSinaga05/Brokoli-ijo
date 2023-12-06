@@ -1,4 +1,4 @@
-import 'package:basic/Provider/Provider.dart';
+import 'package:basic/Provider/MyProvider.dart';
 import 'package:basic/style/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -19,14 +19,33 @@ class _AppBarScreenState extends State<AppBarScreen> {
   String temperature = '';
   String city = '';
   late DateTime selectedDate; // Tambahkan variabel selectedDate
+  DateTime sekarang = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    selectedDate =
-        DateTime.now(); // Inisialisasi selectedDate ke DateTime.now()
+    setState(() {
+      selectedDate = sekarang;
+    });
 
     fetchData();
+  }
+
+  void imagepicker() async {
+    final provTugas2 = context.watch<DataProfileProvider>();
+    var res = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Gunakan selectedDate
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2500),
+    );
+
+    if (res != null) {
+      setState(() {
+        selectedDate = res; // Perbarui selectedDate
+        provTugas2.setdate = res;
+      });
+    }
   }
 
   Future<void> fetchData() async {
@@ -51,7 +70,7 @@ class _AppBarScreenState extends State<AppBarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final provTugas2 = context.watch<ProviderTugas2>();
+    final provTugas2 = context.watch<DataProfileProvider>();
     var date = provTugas2.dataCurrentdate;
     var dateFormat = DateFormat("EEEE, dd MMMM yyyy").format(date);
 

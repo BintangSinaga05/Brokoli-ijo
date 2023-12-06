@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:math';
-
+import 'package:basic/Page/suplemen_page/Seller.dart';
 import 'package:basic/Page/suplemen_page/cart_page.dart';
-import 'package:basic/Page/suplemen_page/model.dart';
+import 'package:basic/Page/suplemen_page/SuplemenModel.dart';
 import 'package:basic/style/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,19 +22,6 @@ class _SuplemenPageState extends State<SuplemenPage> {
   void initState() {
     readData();
     super.initState();
-  }
-
-  Future testData() async {
-    await Firebase.initializeApp();
-    print('init done');
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    print('init Firestore Done');
-
-    var data = await db.collection('suplemen_shop').get().then((event) {
-      for (var doc in event.docs) {
-        print("${doc.id} => ${doc.data()}");
-      }
-    });
   }
 
   Future readData() async {
@@ -65,27 +50,6 @@ class _SuplemenPageState extends State<SuplemenPage> {
     });
   }
 
-  // addRand() async {
-  //   await Firebase.initializeApp();
-  //   FirebaseFirestore db = FirebaseFirestore.instance;
-  //   String getRandString(int len) {
-  //     var random = Random.secure();
-  //     var values = List<int>.generate(len, (i) => random.nextInt(255));
-  //     return base64UrlEncode(values);
-  //   }
-
-  //   EventModel InsertData = EventModel(
-  //       judul: getRandString(5),
-  //       keterangan: getRandString(30),
-  //       tanggal: getRandString(10),
-  //       islike: Random().nextBool(),
-  //       pembicara: getRandString(20));
-  //   await db.collection("suplemen_shop").add(InsertData.toMap());
-  //   setState(() {
-  //     details.add(InsertData);
-  //   });
-  // }
-
   deleteLast(String documentId) async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     await db.collection("suplemen_shop").doc(documentId).delete();
@@ -93,26 +57,6 @@ class _SuplemenPageState extends State<SuplemenPage> {
       details.removeLast();
     });
   }
-
-  // updateEvent(int pos) async {
-  //   FirebaseFirestore db = FirebaseFirestore.instance;
-  //   await db
-  //       .collection("suplemen_shop")
-  //       .doc(details[pos].id)
-  //       .update({'islike': !details[pos].islike});
-  //   setState(() {
-  //     details[pos].islike = !details[pos].islike;
-  //   });
-  // }
-
-  // void filterSuplemen(String query) {
-  //   setState(() {
-  //     filteredSuplemenList = suplemenList
-  //         .where((suplemen) =>
-  //             suplemen['name'].toLowerCase().contains(query.toLowerCase()))
-  //         .toList();
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -174,27 +118,29 @@ class _SuplemenPageState extends State<SuplemenPage> {
               ),
             ),
             Expanded(
-                child: ListView.builder(
-              itemCount: filteredSuplemenList.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                      // leading: Image.network(filteredSuplemenList[index].imageUrl),
-                      title: Text(filteredSuplemenList[index].namasuplemen),
-                      subtitle: Text(filteredSuplemenList[index].jenissuplemen),
-                      trailing: const Text("Add to Cart")),
-                );
-              },
-            )),
-            // Expanded(
-            //   child: Scrollbar(
-            //     child: ListView(
-            //       padding: const EdgeInsets.all(0),
-            //       children:
-            //           _buildSupplementItems(filteredSuplemenList, screenWidth),
-            //     ),
-            //   ),
-            // ),
+              child: Column(
+                children: filteredSuplemenList.map((suplemen) {
+                  return Card(
+                    child: ListTile(
+                      leading: Image.network(
+                        suplemen.gambarsuplemen,
+                        width: screenWidth * 0.1,
+                        height: screenHeight * 0.1,
+                      ),
+                      title: Text(suplemen.namasuplemen),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Jenis: ${suplemen.jenissuplemen}"),
+                          Text("Harga: ${suplemen.hargasuplemen}"),
+                        ],
+                      ),
+                      trailing: const Text("Add to Cart"),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
             SizedBox(
               height: screenHeight * 0.001,
             ),
@@ -202,7 +148,13 @@ class _SuplemenPageState extends State<SuplemenPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Seller(),
+                        ));
+                  },
                   child: const Text("Jual Barang"),
                 ),
                 ElevatedButton(

@@ -1,4 +1,5 @@
-import 'package:basic/Provider/Provider.dart';
+import 'package:basic/Provider/MyProvider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,11 +11,37 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late String uid;
+  late Map<String, dynamic> userData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    uid = context.read<DataProfileProvider>().uid ?? "";
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+      if (userSnapshot.exists) {
+        setState(() {
+          userData = userSnapshot.data() as Map<String, dynamic>;
+        });
+      } else {
+        print('User data not found.');
+      }
+    } catch (error) {
+      print('Error fetching user data: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     const double topWidgetHeight = 200.0;
     const double avatarRadius = 68.0;
-    final provTugas2 = context.watch<ProviderTugas2>();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -41,18 +68,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${provTugas2.username}',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold)),
                         Text(
-                          '${provTugas2.phonenum}',
+                          "${userData['username']}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${userData['email']}",
                           style: const TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(
                           height: 10,
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -60,53 +89,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Expanded(
                 child: Container(
-                    decoration: const BoxDecoration(color: Colors.black87),
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 40),
-                    child: Column(
-                      children: [
-                        TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: TextEditingController(
-                            text: "${provTugas2.email}",
-                          ),
-                          decoration: const InputDecoration(
-                              labelText: 'YOUR EMAIL',
-                              labelStyle: TextStyle(color: Colors.blueGrey)),
+                  decoration: const BoxDecoration(color: Colors.black87),
+                  alignment: Alignment.center,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+                  child: Column(
+                    children: [
+                      TextField(
+                        style: const TextStyle(color: Colors.white),
+                        controller: TextEditingController(
+                          text: "${userData['city']}",
                         ),
-                        // TextField(
-                        //   style: const TextStyle(color: Colors.white),
-                        //   controller: TextEditingController(
-                        //     text: provTugas2.password,
-                        //   ),
-                        //   obscureText: provTugas2.dataCurrentObsPassword,
-                        //   decoration: InputDecoration(
-                        //       labelText: "YOUR PASSWORD",
-                        //       labelStyle:
-                        //           const TextStyle(color: Colors.blueGrey),
-                        //       suffix: ElevatedButton(
-                        //           onPressed: () {
-                        //             provTugas2.setObsPassword =
-                        //                 !provTugas2.dataCurrentObsPassword;
-                        //           },
-                        //           child: const Text("Show"))),
-                        // ),
-
-                        TextField(
-                          style: const TextStyle(color: Colors.white),
-                          controller: TextEditingController(
-                            text: "Medan/Indonesia",
-                          ),
-                          decoration: const InputDecoration(
-                              labelText: 'CITY/COUNTRY',
-                              labelStyle: TextStyle(color: Colors.blueGrey)),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    )),
+                        decoration: const InputDecoration(
+                            labelText: 'CITY',
+                            labelStyle: TextStyle(color: Colors.blueGrey)),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -117,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               radius: avatarRadius,
               child: Image.asset("assets/profile.png"),
             ),
-          )
+          ),
         ],
       ),
     );

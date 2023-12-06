@@ -1,7 +1,8 @@
 import 'package:basic/Page/sign%20up_page.dart';
+import 'package:basic/Provider/MyProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'auth.dart';
+import 'package:provider/provider.dart';
 import '../main_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -15,19 +16,27 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool isDataValid = true;
-  final auth = AuthFirebase();
+
   bool isLoggingIn = false;
 
   Future<String?> _loginUser() async {
     setState(() {
-      isLoggingIn = true; // Set state menjadi true saat login dimulai
+      isLoggingIn = true;
     });
 
     try {
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
       final email = _emailController.text;
       final password = _passwordController.text;
-      await auth.login(email, password);
+
+      UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      String uid = userCredential.user?.uid ?? "";
+      context.read<DataProfileProvider>().setUid(uid);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
@@ -37,7 +46,7 @@ class _LoginState extends State<Login> {
           msg: error.message ?? "An Error occured", gravity: ToastGravity.TOP);
     } finally {
       setState(() {
-        isLoggingIn = false; // Set state menjadi false setelah login selesai
+        isLoggingIn = false;
       });
     }
 
@@ -129,30 +138,25 @@ class _LoginState extends State<Login> {
                                         ),
                                       );
                                     }
-                                    // Melakukan login menggunakan AuthFirebase
                                   },
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     backgroundColor: Colors.white,
                                   ),
-                                  child:
-                                      isLoggingIn // Tampilkan CircularProgressIndicator jika sedang login
-                                          ? const CircularProgressIndicator(
-                                              valueColor:
-                                                  AlwaysStoppedAnimation<Color>(
-                                                      Colors.black),
-                                            )
-                                          : const Text(
-                                              'Sign',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.black,
-                                              ),
-                                            ),
+                                  child: isLoggingIn
+                                      ? const CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.black),
+                                        )
+                                      : const Text(
+                                          'Sign',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black,
+                                          ),
+                                        ),
                                 )),
-                            const SizedBox(
-                              height: 20,
-                            ),
                             TextButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
