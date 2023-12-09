@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Seller extends StatefulWidget {
   const Seller({super.key});
@@ -20,13 +22,56 @@ class _SellerState extends State<Seller> {
   final TextEditingController _hargasuplemen = TextEditingController();
   List<EventModel> details = [];
 
-  Future<void> _pickImage(ImageSource source) async {
-    final pickedFile = await ImagePicker().pickImage(source: source);
+  Future<void> _checkPermission(ImageSource source) async {
+    PermissionStatus status;
 
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
+    if (source == ImageSource.camera) {
+      status = await Permission.camera.request();
+    } else {
+      return;
+    }
+    if (status != PermissionStatus.granted) {
+      // ignore: use_build_context_synchronously
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Izin akses ditolak'),
+            content: Column(
+              children: [
+                const Text(
+                    'Untuk menggunakan fitur ini, aktifkan akses kamera di pengaturan perangkat Anda.'),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    openAppSettings();
+                  },
+                  child: const Text('Buka Pengaturan'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      await _checkPermission(source);
+
+      final pickedFile = await ImagePicker().pickImage(source: source);
+
+      if (pickedFile != null) {
+        setState(() {
+          _image = File(pickedFile.path);
+        });
+      } else {
+        print('User canceled image picking');
+      }
+    } on PlatformException catch (e) {
+      print('Error picking image: $e');
+      // ignore: use_build_context_synchronously
     }
   }
 
