@@ -118,6 +118,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
               ),
             ),
             Expanded(
+                child: SingleChildScrollView(
               child: Column(
                 children: filteredSuplemenList.map((suplemen) {
                   return Card(
@@ -140,7 +141,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
                   );
                 }).toList(),
               ),
-            ),
+            )),
             SizedBox(
               height: screenHeight * 0.001,
             ),

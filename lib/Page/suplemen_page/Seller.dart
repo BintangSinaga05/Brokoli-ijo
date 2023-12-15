@@ -188,6 +188,12 @@ class _SellerState extends State<Seller> {
             ElevatedButton(
               onPressed: () async {
                 await _uploadData();
+                _namasuplemen.clear();
+                _hargasuplemen.clear();
+                _jenissuplemen.clear();
+                setState(() {
+                  _image = null;
+                });
               },
               child: const Text("Jual Barang"),
             )
