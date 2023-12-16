@@ -1,5 +1,4 @@
 import 'package:basic/Provider/MyProvider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,35 +10,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String uid;
-  late Map<String, dynamic> userData = {};
-
-  @override
-  void initState() {
-    super.initState();
-    uid = context.read<DataProfileProvider>().uid ?? "";
-    _fetchUserData();
-  }
-
-  Future<void> _fetchUserData() async {
-    try {
-      DocumentSnapshot userSnapshot =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-      if (userSnapshot.exists) {
-        setState(() {
-          userData = userSnapshot.data() as Map<String, dynamic>;
-        });
-      } else {
-        print('User data not found.');
-      }
-    } catch (error) {
-      print('Error fetching user data: $error');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final datauser = Provider.of<DataProfileProvider>(context);
     const double topWidgetHeight = 200.0;
     const double avatarRadius = 68.0;
     return Scaffold(
@@ -69,14 +42,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${userData['username']}",
+                          datauser.username,
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          "${userData['email']}",
+                          datauser.email,
                           style: const TextStyle(color: Colors.grey),
                         ),
                         const SizedBox(
@@ -98,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       TextField(
                         style: const TextStyle(color: Colors.white),
                         controller: TextEditingController(
-                          text: "${userData['city']}",
+                          text: datauser.city,
                         ),
                         decoration: const InputDecoration(
                             labelText: 'CITY',

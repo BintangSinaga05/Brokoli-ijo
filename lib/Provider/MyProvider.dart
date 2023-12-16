@@ -1,8 +1,10 @@
-import 'package:basic/Page/suplemen_page/SuplemenModel.dart';
 import 'package:flutter/material.dart';
 
 //provider yang digunakan untuk menangani data register dan login
 class DataProfileProvider extends ChangeNotifier {
+  String username = "";
+  String email = "";
+  String city = "";
   inisialisasi() {}
 
   int? currentIndex = 0;
@@ -25,15 +27,11 @@ class DataProfileProvider extends ChangeNotifier {
     _uid = uid;
     notifyListeners();
   }
-}
 
-class SuplemenProvider extends ChangeNotifier {
-  List<EventModel> _filteredSuplemenList = [];
-
-  List<EventModel> get filteredSuplemenList => _filteredSuplemenList;
-
-  void updateFilteredSuplemenList(List<EventModel> newList) {
-    _filteredSuplemenList = newList;
+  void DataUser(String newUsername, String newEmail, String newcity) {
+    username = newUsername;
+    email = newEmail;
+    city = newcity;
     notifyListeners();
   }
 }

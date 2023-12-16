@@ -11,7 +11,6 @@ Future<void> main() async {
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => DataProfileProvider()),
-    ChangeNotifierProvider(create: (_) => SuplemenProvider())
   ], child: const MyApp()));
 }
 

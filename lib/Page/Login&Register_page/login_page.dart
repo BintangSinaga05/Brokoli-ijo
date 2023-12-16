@@ -1,5 +1,6 @@
 import 'package:basic/Page/sign%20up_page.dart';
 import 'package:basic/Provider/MyProvider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  late Map<String, dynamic> userData = {};
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -37,6 +39,16 @@ class _LoginState extends State<Login> {
 
       String uid = userCredential.user?.uid ?? "";
       context.read<DataProfileProvider>().setUid(uid);
+
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      setState(() {
+        userData = userSnapshot.data() as Map<String, dynamic>;
+      });
+
+      context
+          .read<DataProfileProvider>()
+          .DataUser(userData['username'], userData['email'], userData['city']);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
