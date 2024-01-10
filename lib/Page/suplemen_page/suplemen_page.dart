@@ -136,7 +136,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
                           Text("Harga: ${suplemen.hargasuplemen}"),
                         ],
                       ),
-                      trailing: const Text("Add to Cart"),
+                      trailing: ElevatedButton(onPressed: (){}, child: Icon(Icons.shopping_cart_checkout_outlined)),
                     ),
                   );
                 }).toList(),
@@ -165,7 +165,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
                         MaterialPageRoute(
                             builder: (context) => const CartScreen()));
                   },
-                  child: const Text("Lihat Ke ranjang"),
+                  child: Icon(Icons.shopping_cart_checkout_outlined),
                 ),
               ],
             ),
