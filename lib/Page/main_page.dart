@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
     final List body = [
       const SchedulePage(),
       const TrainerPage(),
-      const MemberPage(),
+      const Membership(),
       const SuplemenPage(),
     ];
 

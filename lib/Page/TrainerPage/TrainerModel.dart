@@ -4,7 +4,6 @@ class EventModel {
   String? id;
   String namatrainer;
   String jenistrainer;
-  int like;
   String contact;
   String gambartrainer;
   String pengalaman;
@@ -13,7 +12,6 @@ class EventModel {
       {this.id,
       required this.namatrainer,
       required this.jenistrainer,
-      required this.like,
       required this.contact,
       required this.gambartrainer,
       required this.pengalaman});
@@ -22,7 +20,6 @@ class EventModel {
     return {
       'namatrainer': namatrainer,
       'jenistrainer': jenistrainer,
-      'like': like,
       'contact': contact,
       'gambartrainer': gambartrainer,
       'pengalaman': pengalaman
@@ -33,7 +30,6 @@ class EventModel {
       : id = doc.id,
         namatrainer = doc.data()?['namatrainer'],
         jenistrainer = doc.data()?['jenistrainer'],
-        like = doc.data()?['like'],
         contact = doc.data()?['contact'],
         gambartrainer = doc.data()?['gambartrainer'],
         pengalaman = doc.data()?['pengalaman'];
