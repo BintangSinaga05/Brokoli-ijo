@@ -87,8 +87,6 @@ class _SellerState extends State<Seller> {
 
       final String downloadURL = await storageReference.getDownloadURL();
 
-      print(downloadURL);
-
       await Firebase.initializeApp();
       FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -101,6 +99,7 @@ class _SellerState extends State<Seller> {
         jenissuplemen: jenissuplemen,
         hargasuplemen: hargasuplemen,
         gambarsuplemen: downloadURL,
+        id: '',
       );
 
       await db.collection("suplemen_shop").add(insertData.toMap());

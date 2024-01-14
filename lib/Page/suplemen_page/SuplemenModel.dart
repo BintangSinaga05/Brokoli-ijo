@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EventModel {
-  String? id;
+  String id;
   String namasuplemen;
   String jenissuplemen;
   int hargasuplemen;
   String gambarsuplemen;
 
   EventModel(
-      {this.id,
+      {required this.id,
       required this.namasuplemen,
       required this.jenissuplemen,
       required this.hargasuplemen,

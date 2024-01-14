@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-//provider yang digunakan untuk menangani data register dan login
 class DataProfileProvider extends ChangeNotifier {
   String username = "";
   String email = "";
   String city = "";
+  String? profilephoto; // Updated to allow null
   inisialisasi() {}
 
   int? currentIndex = 0;
@@ -28,10 +28,20 @@ class DataProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void DataUser(String newUsername, String newEmail, String newcity) {
+  // Metode untuk mengupdate profile photo
+  void updateProfilePhoto(String? newProfilePhoto) {
+    profilephoto = newProfilePhoto;
+    notifyListeners();
+  }
+
+  // Metode untuk mengupdate semua data pengguna
+  void updateUserData(String newUsername, String newEmail, String newCity,
+      String? newProfilePhoto) {
+    // Updated to allow null
     username = newUsername;
     email = newEmail;
-    city = newcity;
+    city = newCity;
+    profilephoto = newProfilePhoto;
     notifyListeners();
   }
 }

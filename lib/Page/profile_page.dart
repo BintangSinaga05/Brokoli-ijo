@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:basic/Provider/MyProvider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -15,26 +16,36 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   File? _imageFile;
-  late SharedPreferences _prefs;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadImage();
-  }
+  Future<void> _uploadData() async {
+    if (_imageFile == null) return;
 
-  Future<void> _loadImage() async {
-    _prefs = await SharedPreferences.getInstance();
-    final imagePath = _prefs.getString('profile_image');
-    if (imagePath != null) {
-      setState(() {
-        _imageFile = File(imagePath);
+    try {
+      final data = context.read<DataProfileProvider>();
+      final Reference storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profilephoto/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await storageReference.putFile(_imageFile!);
+
+      final downloadURL = await storageReference.getDownloadURL();
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(data.uid)
+          .update({
+        'profilephoto': downloadURL,
       });
-    }
-  }
 
-  Future<void> _saveImage(String imagePath) async {
-    await _prefs.setString('profile_image', imagePath);
+      data.updateProfilePhoto(downloadURL);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Profile image uploaded successfully'),
+        ),
+      );
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
   }
 
   Future<void> _pickImage(ImageSource source) async {
@@ -44,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
-      await _saveImage(pickedFile.path);
+      await _uploadData(); // Call _uploadData when the image is picked.
     }
   }
 
@@ -130,7 +141,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             top: topWidgetHeight - avatarRadius - 40,
             child: InkWell(
               onTap: () {
-                // Show options for selecting an image.
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -141,9 +151,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             ListTile(
                               title: const Text("Take a picture"),
-                              onTap: () {
+                              onTap: () async {
                                 Navigator.pop(context);
-                                _pickImage(ImageSource.camera);
+                                await _pickImage(ImageSource.camera);
                               },
                             ),
                             ListTile(
@@ -162,9 +172,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
               child: CircleAvatar(
                 radius: avatarRadius,
-                backgroundImage: _imageFile != null
-                    ? FileImage(_imageFile!)
-                    : AssetImage("assets/profile.png") as ImageProvider,
+                backgroundImage: NetworkImage(datauser.profilephoto ??
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJTyP_dN0d_ljlUG7dduuzl3la_T1LktyL3fboeTs66A&s"),
               ),
             ),
           ),

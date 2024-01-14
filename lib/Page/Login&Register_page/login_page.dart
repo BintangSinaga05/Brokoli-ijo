@@ -46,9 +46,8 @@ class _LoginState extends State<Login> {
         userData = userSnapshot.data() as Map<String, dynamic>;
       });
 
-      context
-          .read<DataProfileProvider>()
-          .DataUser(userData['username'], userData['email'], userData['city']);
+      context.read<DataProfileProvider>().updateUserData(userData['username'],
+          userData['email'], userData['city'], userData['profilephoto']);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));

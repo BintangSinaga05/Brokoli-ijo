@@ -15,6 +15,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  late Map<String, dynamic> userData = {};
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -50,6 +51,15 @@ class _RegisterState extends State<Register> {
 
       await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
+
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      setState(() {
+        userData = userSnapshot.data() as Map<String, dynamic>;
+      });
+
+      context.read<DataProfileProvider>().updateUserData(userData['username'],
+          userData['email'], userData['city'], userData['profilephoto']);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const MainPage()));
