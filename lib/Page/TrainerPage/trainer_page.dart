@@ -27,7 +27,8 @@ class TrainerPage extends StatefulWidget {
   _TrainerPageState createState() => _TrainerPageState();
 }
 
-class _TrainerPageState extends State<TrainerPage> {
+class _TrainerPageState extends State<TrainerPage>
+    with AutomaticKeepAliveClientMixin {
   List<EventModel> details = [];
   List<EventModel> filteredTrainerList = [];
   TextEditingController search = TextEditingController();
@@ -100,7 +101,10 @@ class _TrainerPageState extends State<TrainerPage> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(

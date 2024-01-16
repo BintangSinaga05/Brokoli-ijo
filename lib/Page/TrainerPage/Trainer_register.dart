@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:basic/Page/TrainerPage/TrainerModel.dart';
-import 'package:basic/Page/TrainerPage/trainer_page.dart';
 import 'package:basic/Provider/MyProvider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';

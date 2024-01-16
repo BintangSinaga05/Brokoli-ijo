@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
-      await _uploadData(); // Call _uploadData when the image is picked.
+      await _uploadData();
     }
   }
 
@@ -118,14 +118,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
                   child: Column(
                     children: [
-                      TextField(
-                        style: const TextStyle(color: Colors.white),
-                        controller: TextEditingController(
-                          text: datauser.city,
-                        ),
-                        decoration: const InputDecoration(
-                            labelText: 'CITY',
-                            labelStyle: TextStyle(color: Colors.blueGrey)),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_city,
+                                    color: Colors.blueGrey,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    'CITY:',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                datauser.city,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 20,

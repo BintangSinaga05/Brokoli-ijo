@@ -1,141 +1,112 @@
+import 'package:basic/Page/member_page/memberModel.dart';
+import 'package:basic/Page/member_page/member_detail_page.dart';
 import 'package:basic/style/style.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class Membership extends StatefulWidget {
-  const Membership({super.key});
+class MemberPage extends StatefulWidget {
+  const MemberPage({super.key});
 
   @override
-  _MembershipState createState() => _MembershipState();
+  State<MemberPage> createState() => _MemberPageState();
 }
 
-class _MembershipState extends State<Membership> {
-  bool isButtonPressed = false;
+class _MemberPageState extends State<MemberPage>
+    with AutomaticKeepAliveClientMixin {
+  List<EventModel> details = [];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colorbase,
-      appBar: AppBar(
-        backgroundColor: colorbase,
-        title: const Text(
-          'Buy Membership',
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          MembershipCard(
-            name: 'Basic Membership',
-            description: 'Access to basic gym facilities',
-            price: '\$30/month',
-            icon: Icons.accessibility,
-            onPressed: () {
-              // Handle buy button click
-              setState(() {
-                isButtonPressed = true;
-              });
-            },
-            isButtonPressed: isButtonPressed,
-          ),
-          const SizedBox(height: 16),
-          MembershipCard(
-            name: 'Premium Membership',
-            description: 'Full access to all gym facilities and classes',
-            price: '\$50/month',
-            icon: Icons.star,
-            onPressed: () {
-              // Handle buy button click
-              setState(() {
-                isButtonPressed = true;
-              });
-            },
-            isButtonPressed: isButtonPressed,
-          ),
-          const SizedBox(height: 16),
-          MembershipCard(
-            name: 'Deluxe Membership',
-            description: 'VIP access, personal trainer, and more',
-            price: '\$100/month',
-            icon: Icons.card_giftcard,
-            onPressed: () {
-              // Handle buy button click
-              setState(() {
-                isButtonPressed = true;
-              });
-            },
-            isButtonPressed: isButtonPressed,
-          ),
-        ],
-      ),
-    );
+  void initState() {
+    readData();
+    super.initState();
   }
-}
 
-class MembershipCard extends StatelessWidget {
-  final String name;
-  final String description;
-  final String price;
-  final IconData icon;
-  final VoidCallback onPressed;
-  final bool isButtonPressed;
+  Future<void> readData() async {
+    await Firebase.initializeApp();
+    FirebaseFirestore db = FirebaseFirestore.instance;
 
-  const MembershipCard({
-    super.key,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.icon,
-    required this.onPressed,
-    required this.isButtonPressed,
-  });
+    try {
+      var data = await db.collection('member_package').get();
+
+      // Check if the widget is still mounted before calling setState
+      if (mounted) {
+        setState(() {
+          details =
+              data.docs.map((doc) => EventModel.fromDocSnapshot(doc)).toList();
+        });
+      }
+    } catch (error) {
+      // Handle the error appropriately
+      print('Error fetching data: $error');
+      // You might want to show an error message to the user
+    }
+  }
 
   @override
+  bool get wantKeepAlive => true;
+  @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      color: const Color(0xffb28242c), // Set the desired color here
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              icon,
-              size: 48,
-              color: Theme.of(context).primaryColor,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              name,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    super.build(context);
+    return Container(
+      width: double.infinity,
+      color: colorbase,
+      child: Column(
+        children: [
+          for (var member in details)
+            Card(
+              elevation: 4,
+              color: const Color(0xffb28242c), // Set the desired color here
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.card_membership,
+                      size: 48,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      member.tipemember,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      "akses premium untuk membuka keuntungan lainnya.",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      "${member.hargamember}/Bulan",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MemberDetailPage(member: member)));
+                      },
+                      child: const Text('details'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: const TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              price,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: isButtonPressed ? null : onPressed,
-              child: const Text('Buy Now'),
-            ),
-          ],
-        ),
+            )
+        ],
       ),
     );
   }

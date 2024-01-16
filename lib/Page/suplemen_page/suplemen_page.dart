@@ -13,7 +13,8 @@ class SuplemenPage extends StatefulWidget {
   State<SuplemenPage> createState() => _SuplemenPageState();
 }
 
-class _SuplemenPageState extends State<SuplemenPage> {
+class _SuplemenPageState extends State<SuplemenPage>
+    with AutomaticKeepAliveClientMixin {
   List<EventModel> details = [];
   TextEditingController searchController = TextEditingController();
   List<EventModel> filteredSuplemenList = [];
@@ -31,8 +32,7 @@ class _SuplemenPageState extends State<SuplemenPage> {
     setState(() {
       details =
           data.docs.map((doc) => EventModel.fromDocSnapshot(doc)).toList();
-      filteredSuplemenList =
-          details; // Inisialisasi filteredSuplemenList dengan data awal
+      filteredSuplemenList = details;
     });
   }
 
@@ -50,16 +50,11 @@ class _SuplemenPageState extends State<SuplemenPage> {
     });
   }
 
-  deleteLast(String documentId) async {
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("suplemen_shop").doc(documentId).delete();
-    setState(() {
-      details.removeLast();
-    });
-  }
-
+  @override
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 

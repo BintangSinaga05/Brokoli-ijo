@@ -1,3 +1,7 @@
+import 'package:basic/Page/TrainerPage/trainer_page.dart';
+import 'package:basic/Page/member_page/member_page.dart';
+import 'package:basic/Page/schedule_page.dart';
+import 'package:basic/Page/suplemen_page/suplemen_page.dart';
 import 'package:flutter/material.dart';
 
 class DataProfileProvider extends ChangeNotifier {
@@ -5,6 +9,12 @@ class DataProfileProvider extends ChangeNotifier {
   String email = "";
   String city = "";
   String? profilephoto; // Updated to allow null
+  List<Widget> _body = [
+    const SchedulePage(),
+    const TrainerPage(),
+    const MemberPage(),
+    const SuplemenPage(),
+  ];
   inisialisasi() {}
 
   int? currentIndex = 0;
@@ -42,6 +52,12 @@ class DataProfileProvider extends ChangeNotifier {
     email = newEmail;
     city = newCity;
     profilephoto = newProfilePhoto;
+    notifyListeners();
+  }
+
+  List<Widget> get body => _body;
+  void updateBody(List<Widget> newBody) {
+    _body = newBody;
     notifyListeners();
   }
 }
