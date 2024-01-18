@@ -12,9 +12,67 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  Set<int> selectedItems = <int>{};
+  List<Map<String, dynamic>> cartItems = [];
+
+  void _handleDeleteSelectedItems() async {
+    final uid = context.read<DataProfileProvider>().uid;
+    setState(() {
+      List<Map<String, dynamic>> updatedCartItems = List.from(cartItems);
+      List<int> sortedIndexes = selectedItems.toList()
+        ..sort((a, b) => b.compareTo(a));
+
+      for (int index in sortedIndexes) {
+        if (index >= 0 && index < updatedCartItems.length) {
+          String documentId = updatedCartItems[index]['documentId'];
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(uid)
+              .collection('cart')
+              .doc(documentId)
+              .delete();
+
+          updatedCartItems.removeAt(index);
+        }
+      }
+
+      selectedItems.clear();
+      cartItems = updatedCartItems;
+    });
+  }
+
+  Future<void> _showDeleteConfirmationDialog() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Confirmation"),
+          content:
+              const Text("Are you sure you want to delete the selected items?"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                _handleDeleteSelectedItems();
+                Navigator.of(context).pop();
+              },
+              child: const Text("Delete"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final uid = context.read<DataProfileProvider>().uid;
+    final username = context.read<DataProfileProvider>().username;
     return Scaffold(
       backgroundColor: colorbase,
       appBar: AppBar(
@@ -32,12 +90,14 @@ class _CartScreenState extends State<CartScreen> {
                 color: Colors.white,
               ),
             ),
-            const Text(
-              "C A R T",
-              style: TextStyle(color: Colors.white),
+            Text(
+              "$username`s C A R T",
+              style: const TextStyle(color: Colors.white),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                _showDeleteConfirmationDialog();
+              },
               icon: const Icon(
                 Icons.delete,
                 color: Colors.white,
@@ -71,7 +131,6 @@ class _CartScreenState extends State<CartScreen> {
             List<QueryDocumentSnapshot<Map<String, dynamic>>> cartDocuments =
                 querySnapshot.docs;
 
-            // Check if the subcollection "cart" is empty
             if (cartDocuments.isEmpty) {
               return const Center(
                 child: Text(
@@ -81,87 +140,73 @@ class _CartScreenState extends State<CartScreen> {
               );
             }
 
-            List<Map<String, dynamic>> cartItems =
-                cartDocuments.map((document) {
+            cartItems = cartDocuments.map((document) {
               Map<String, dynamic> data = document.data();
+              data['documentId'] = document.id;
 
               return data;
             }).toList();
 
             return Column(
               children: [
-                // Main
                 Expanded(
                   child: Container(
                     decoration: const BoxDecoration(color: colorbase),
                     child: Column(
-                      children: cartItems.map((cartItem) {
+                      children: cartItems.asMap().entries.map((entry) {
+                        final int index = entry.key;
+                        final Map<String, dynamic> cartItem = entry.value;
+
                         return Container(
-                          decoration: BoxDecoration(color: Colors.grey[700]),
+                          decoration: BoxDecoration(
+                            color: selectedItems.contains(index)
+                                ? Colors.blue
+                                : Colors.grey[700],
+                          ),
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.check_box_outline_blank,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    width: 120,
-                                    height: 90,
-                                    child: Image.network(
-                                      cartItem['gambarsuplemen'] ?? '',
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 125,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          cartItem['namasuplemen'] ?? '',
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        Text(
-                                          "Rp ${cartItem['hargasuplemen']?.toString() ?? ''}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              Checkbox(
+                                value: selectedItems.contains(index),
+                                onChanged: (value) {
+                                  setState(() {
+                                    if (value!) {
+                                      selectedItems.add(index);
+                                    } else {
+                                      selectedItems.remove(index);
+                                    }
+                                  });
+                                },
+                                activeColor: Colors.white,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Icon(
-                                    Icons.remove_circle,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    cartItem['quantity']?.toString() ?? '',
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const Icon(
-                                    Icons.add_circle,
-                                    color: Colors.white,
-                                  ),
-                                ],
+                              SizedBox(
+                                width: 120,
+                                height: 90,
+                                child: Image.network(
+                                  cartItem['gambarsuplemen'] ?? '',
+                                ),
+                              ),
+                              SizedBox(
+                                width: 125,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      cartItem['namasuplemen'] ?? '',
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                    ),
+                                    Text(
+                                      "Rp ${cartItem['hargasuplemen']?.toString() ?? ''}",
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -170,8 +215,6 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                 ),
-
-                // Total belanjaan
                 Container(
                   decoration: const BoxDecoration(color: Color(0xffb28242c)),
                   padding:
