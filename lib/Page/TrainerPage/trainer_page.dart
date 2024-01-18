@@ -107,6 +107,7 @@ class _TrainerPageState extends State<TrainerPage>
     super.build(context);
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: colorbase,
       body: Container(
         color: colorbase,
         child: SingleChildScrollView(
@@ -172,7 +173,7 @@ class _TrainerPageState extends State<TrainerPage>
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0xffd9d9d9), // Slightly lighter color
+                      color: const Color(0xffd9d9d9),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
@@ -198,22 +199,22 @@ class _TrainerPageState extends State<TrainerPage>
                               Text(
                                 trainer.namatrainer,
                                 style: TextStyle(
-                                  color: Colors.black, // Change text color
+                                  color: Colors.black,
                                   fontSize: screenWidth * 0.04,
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
                               Text(
-                                'pengalaman: ${trainer.pengalaman}', // Display age
+                                'pengalaman: ${trainer.pengalaman}',
                                 style: const TextStyle(
-                                  color: Colors.black, // Change text color
+                                  color: Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Tap untuk lebih detail', // Visual cue for clickability
+                                'Tap untuk lebih detail',
                                 style: TextStyle(
-                                  color: Colors.blue, // Change color as needed
+                                  color: Colors.blue,
                                 ),
                               ),
                             ],
@@ -232,7 +233,6 @@ class _TrainerPageState extends State<TrainerPage>
 
   @override
   void dispose() {
-    // Dispose of resources, timers, etc.
     super.dispose();
   }
 }

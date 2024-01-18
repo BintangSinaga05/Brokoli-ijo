@@ -14,7 +14,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   Widget build(BuildContext context) {
     final provTugas2 = context.watch<DataProfileProvider>();
     return BottomNavigationBar(
-      showSelectedLabels: false, //selected item
+      showSelectedLabels: false,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.black,

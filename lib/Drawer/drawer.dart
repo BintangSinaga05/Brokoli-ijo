@@ -12,13 +12,16 @@ class Drawerku extends StatefulWidget {
 
 class _DrawerkuState extends State<Drawerku> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<void> _handleSignOut() async {
+
+  Future<void> _handleSignOut(BuildContext context) async {
     try {
       await _auth.signOut();
-      // Setelah logout berhasil, lakukan tindakan yang sesuai, seperti kembali ke layar login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()),
+      );
     } catch (e) {
       print('Error during sign out: $e');
-      // Tampilkan pesan kesalahan atau lakukan tindakan yang sesuai sesuai kebutuhan aplikasi Anda
     }
   }
 
@@ -44,7 +47,7 @@ class _DrawerkuState extends State<Drawerku> {
                 color: Colors.white,
               ),
               onTap: () {
-                Navigator.of(context).pop(); // Tutup Drawer
+                Navigator.of(context).pop();
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const ProfileScreen(),
@@ -63,9 +66,7 @@ class _DrawerkuState extends State<Drawerku> {
                 color: Colors.white,
               ),
               onTap: () async {
-                await _handleSignOut();
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: ((context) => const Login())));
+                await _handleSignOut(context);
               },
             ),
           ],

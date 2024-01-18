@@ -1,6 +1,7 @@
 import 'package:basic/Page/suplemen_page/Seller.dart';
 import 'package:basic/Page/suplemen_page/cart_page.dart';
 import 'package:basic/Page/suplemen_page/SuplemenModel.dart';
+import 'package:basic/Page/suplemen_page/suplemen_detail_page.dart';
 import 'package:basic/style/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -69,18 +70,21 @@ class _SuplemenPageState extends State<SuplemenPage>
             Center(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(10, screenHeight * 0.01, 10, 0),
-                child: Text(
-                  "Suplemen Shop",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: screenWidth * 0.06,
-                    fontWeight: FontWeight.w900,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Suplemen Shop",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: screenWidth * 0.06,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-
-            // Widget Search
             Container(
               margin: EdgeInsets.fromLTRB(
                 screenWidth * 0.1,
@@ -113,30 +117,71 @@ class _SuplemenPageState extends State<SuplemenPage>
               ),
             ),
             Expanded(
-                child: SingleChildScrollView(
-              child: Column(
-                children: filteredSuplemenList.map((suplemen) {
-                  return Card(
-                    child: ListTile(
-                      leading: Image.network(
-                        suplemen.gambarsuplemen,
-                        width: screenWidth * 0.1,
-                        height: screenHeight * 0.1,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: screenWidth * 0.02,
+                  mainAxisSpacing: screenHeight * 0.02,
+                ),
+                itemCount: filteredSuplemenList.length,
+                itemBuilder: (context, index) {
+                  EventModel suplemen = filteredSuplemenList[index];
+
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  SuplemenDetailPage(suplemen: suplemen)));
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      title: Text(suplemen.namasuplemen),
-                      subtitle: Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Jenis: ${suplemen.jenissuplemen}"),
-                          Text("Harga: ${suplemen.hargasuplemen}"),
+                          Image.network(
+                            suplemen.gambarsuplemen,
+                            width: double.infinity,
+                            height: screenHeight * 0.145,
+                            fit: BoxFit.cover,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  suplemen.namasuplemen,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "Jenis: ${suplemen.jenissuplemen}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  "Harga: ${suplemen.hargasuplemen}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      trailing: const Text("Add to Cart"),
                     ),
                   );
-                }).toList(),
+                },
               ),
-            )),
+            ),
             SizedBox(
               height: screenHeight * 0.001,
             ),
@@ -164,10 +209,9 @@ class _SuplemenPageState extends State<SuplemenPage>
                 ),
               ],
             ),
-
             SizedBox(
               height: screenHeight * 0.001,
-            ), // Added some extra spacing at the bottom
+            ),
           ],
         ),
       ),
