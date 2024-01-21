@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:basic/Page/suplemen_page/SuplemenModel.dart';
+import 'package:basic/style/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,7 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class Seller extends StatefulWidget {
-  const Seller({super.key});
+  const Seller({
+    super.key,
+  });
 
   @override
   State<Seller> createState() => _SellerState();
@@ -20,7 +23,9 @@ class _SellerState extends State<Seller> {
   final TextEditingController _namasuplemen = TextEditingController();
   final TextEditingController _jenissuplemen = TextEditingController();
   final TextEditingController _hargasuplemen = TextEditingController();
+  final TextEditingController _deskripsi = TextEditingController();
   List<EventModel> details = [];
+  bool _isLoading = false;
 
   Future<void> _checkPermission(ImageSource source) async {
     PermissionStatus status;
@@ -36,17 +41,17 @@ class _SellerState extends State<Seller> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Izin akses ditolak'),
+            title: const Text('Access permission denied'),
             content: Column(
               children: [
                 const Text(
-                    'Untuk menggunakan fitur ini, aktifkan akses kamera di pengaturan perangkat Anda.'),
+                    'To use this feature, enable camera access in your device settings.'),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     openAppSettings();
                   },
-                  child: const Text('Buka Pengaturan'),
+                  child: const Text('Open Settings'),
                 ),
               ],
             ),
@@ -71,12 +76,43 @@ class _SellerState extends State<Seller> {
       }
     } on PlatformException catch (e) {
       print('Error picking image: $e');
-      // ignore: use_build_context_synchronously
     }
   }
 
   Future<void> _uploadData() async {
-    if (_image == null) return;
+    if (_image == null || _isLoading) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (_namasuplemen.text.isEmpty ||
+        _jenissuplemen.text.isEmpty ||
+        _hargasuplemen.text.isEmpty ||
+        _deskripsi.text.isEmpty) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Warning'),
+            content: const Text('All fields must be filled'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
 
     try {
       final Reference storageReference = FirebaseStorage.instance
@@ -92,12 +128,14 @@ class _SellerState extends State<Seller> {
 
       String namasuplemen = _namasuplemen.text;
       String jenissuplemen = _jenissuplemen.text;
+      String deskripsi = _deskripsi.text;
       int hargasuplemen = int.parse(_hargasuplemen.text);
 
       EventModel insertData = EventModel(
         namasuplemen: namasuplemen,
         jenissuplemen: jenissuplemen,
         hargasuplemen: hargasuplemen,
+        deskripsi: deskripsi,
         gambarsuplemen: downloadURL,
         id: '',
       );
@@ -107,6 +145,14 @@ class _SellerState extends State<Seller> {
         details.add(insertData);
       });
 
+      setState(() {
+        _image = null;
+      });
+      _namasuplemen.clear();
+      _hargasuplemen.clear();
+      _jenissuplemen.clear();
+      _deskripsi.clear();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Image uploaded successfully'),
@@ -114,14 +160,23 @@ class _SellerState extends State<Seller> {
       );
     } catch (e) {
       print('Error uploading image: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colorbase,
       appBar: AppBar(
-        title: const Text("Sell item"),
+        backgroundColor: colorbase,
+        title: const Text(
+          "Sell item",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Form(
         child: Column(
@@ -129,15 +184,34 @@ class _SellerState extends State<Seller> {
           children: [
             TextField(
               controller: _namasuplemen,
-              decoration: const InputDecoration(label: Text("Nama Suplemen")),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                label: Text("Suplemen Name",
+                    style: TextStyle(color: Colors.white)),
+              ),
             ),
             TextField(
               controller: _jenissuplemen,
-              decoration: const InputDecoration(label: Text("Jenis Suplemen")),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                label: Text("Suplemen Type",
+                    style: TextStyle(color: Colors.white)),
+              ),
             ),
             TextField(
               controller: _hargasuplemen,
-              decoration: const InputDecoration(label: Text("Harga Suplemen")),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                label: Text("Price", style: TextStyle(color: Colors.white)),
+              ),
+            ),
+            TextField(
+              controller: _deskripsi,
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                label:
+                    Text("Description", style: TextStyle(color: Colors.white)),
+              ),
             ),
             if (_image != null)
               Row(
@@ -145,17 +219,18 @@ class _SellerState extends State<Seller> {
                   Expanded(
                     child: Text(
                       'Selected Image: ${_image!.path.split('/').last}',
-                      style: const TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 10),
                   IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _image = null;
-                        });
-                      },
-                      icon: const Icon(Icons.close))
+                    onPressed: () {
+                      setState(() {
+                        _image = null;
+                      });
+                    },
+                    icon: const Icon(Icons.close),
+                  ),
                 ],
               ),
             if (_image == null)
@@ -166,9 +241,13 @@ class _SellerState extends State<Seller> {
                       _pickImage(ImageSource.camera);
                     },
                     tooltip: "Pick Image From Camera",
-                    icon: const Icon(Icons.camera_front),
+                    icon: const Icon(
+                      Icons.camera_front,
+                      color: Colors.white,
+                    ),
                   ),
-                  const Text("Pick Image From Camera"),
+                  const Text("Pick Image From Camera",
+                      style: TextStyle(color: Colors.white)),
                 ],
               ),
             if (_image == null)
@@ -179,23 +258,24 @@ class _SellerState extends State<Seller> {
                       _pickImage(ImageSource.gallery);
                     },
                     tooltip: "Pick Image From Gallery",
-                    icon: const Icon(Icons.photo_album),
+                    icon: const Icon(
+                      Icons.photo_album,
+                      color: Colors.white,
+                    ),
                   ),
-                  const Text("Pick Image From Gallery"),
+                  const Text("Pick Image From Gallery",
+                      style: TextStyle(color: Colors.white)),
                 ],
               ),
             ElevatedButton(
-              onPressed: () async {
-                await _uploadData();
-                _namasuplemen.clear();
-                _hargasuplemen.clear();
-                _jenissuplemen.clear();
-                setState(() {
-                  _image = null;
-                });
-              },
-              child: const Text("Jual Barang"),
-            )
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      await _uploadData();
+                    },
+              child: const Text("Sell Item",
+                  style: TextStyle(color: Colors.black)),
+            ),
           ],
         ),
       ),

@@ -70,7 +70,7 @@ class _MembershipProfileState extends State<MembershipProfile>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Tipe Membership:',
+              'Membership Type:',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class _MembershipProfileState extends State<MembershipProfile>
             ),
             const SizedBox(height: 8),
             Text(
-              membershipType ?? "Belum Ada",
+              membershipType ?? "There isn't any yet",
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class _MembershipProfileState extends State<MembershipProfile>
             ),
             const SizedBox(height: 16),
             const Text(
-              'Benefit Membership:',
+              'Membership benefits:',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -102,7 +102,7 @@ class _MembershipProfileState extends State<MembershipProfile>
                 ),
             const SizedBox(height: 16),
             const Text(
-              'Tanggal Kadaluarsa:',
+              'Expired date:',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class _MembershipProfileState extends State<MembershipProfile>
             Text(
               membershipExpiryDate != null
                   ? "${membershipExpiryDate!.day}/${membershipExpiryDate!.month}/${membershipExpiryDate!.year}"
-                  : "Belum Ada",
+                  : "There isn't any yet",
               style: const TextStyle(color: Colors.grey),
             ),
           ],

@@ -29,7 +29,6 @@ class _MemberPageState extends State<MemberPage>
     try {
       var data = await db.collection('member_package').get();
 
-      // Check if the widget is still mounted before calling setState
       if (mounted) {
         setState(() {
           details =
@@ -37,9 +36,7 @@ class _MemberPageState extends State<MemberPage>
         });
       }
     } catch (error) {
-      // Handle the error appropriately
       print('Error fetching data: $error');
-      // You might want to show an error message to the user
     }
   }
 
@@ -56,7 +53,7 @@ class _MemberPageState extends State<MemberPage>
           for (var member in details)
             Card(
               elevation: 4,
-              color: const Color(0xffb28242c), // Set the desired color here
+              color: appbarcolor,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -77,14 +74,14 @@ class _MemberPageState extends State<MemberPage>
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      "akses premium untuk membuka keuntungan lainnya.",
+                      "Premium access to unlock other benefits.",
                       style: TextStyle(
                         color: Colors.grey,
                       ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "${member.hargamember}/Bulan",
+                      "${member.hargamember}/Month",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

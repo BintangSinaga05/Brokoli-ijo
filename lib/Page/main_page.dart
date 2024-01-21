@@ -2,7 +2,7 @@ import 'package:basic/App_bar/app_bar_screen.dart';
 import 'package:basic/Bottom_nav/bottom_navigation_screen.dart';
 import 'package:basic/Drawer/drawer.dart';
 import 'package:basic/Page/member_page/membershipActive_page.dart';
-import 'package:basic/Page/schedule_page.dart';
+import 'package:basic/Page/Schedule_page/schedule_page.dart';
 import 'package:basic/Page/suplemen_page/suplemen_page.dart';
 import 'package:basic/Page/TrainerPage/trainer_page.dart';
 import 'package:basic/Provider/MyProvider.dart';

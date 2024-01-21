@@ -57,9 +57,8 @@ class _TrainerPageState extends State<TrainerPage>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Anda sudah terdaftar sebagai trainer'),
-          content:
-              const Text('Anda tidak dapat mendaftar sebagai trainer lagi.'),
+          title: const Text('You are already registered as a trainer'),
+          content: const Text('You cannot register as a trainer again.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -154,7 +153,7 @@ class _TrainerPageState extends State<TrainerPage>
                             }
                           });
                         },
-                        child: const Text("Daftar Trainer"),
+                        child: const Text("Trainer Registration"),
                       )
                     ],
                   ),
@@ -184,14 +183,22 @@ class _TrainerPageState extends State<TrainerPage>
                         ),
                       ],
                     ),
-                    margin: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.all(10),
                     child: Row(
                       children: [
-                        Image.network(
-                          trainer.gambartrainer,
+                        // Bagian gambar dengan ukuran tetap
+                        SizedBox(
                           width: screenWidth * 0.4,
+                          height: screenWidth * 0.6,
+                          child: Image.network(
+                            trainer.gambartrainer,
+                            fit: BoxFit.cover,
+                          ),
                         ),
+                        // Bagian teks dengan ukuran tetap
                         Container(
+                          width:
+                              screenWidth * 0.5, // Sesuaikan dengan kebutuhan
                           margin: const EdgeInsets.only(left: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,14 +212,14 @@ class _TrainerPageState extends State<TrainerPage>
                                 ),
                               ),
                               Text(
-                                'pengalaman: ${trainer.pengalaman}',
+                                'Experience: ${trainer.pengalaman} Year',
                                 style: const TextStyle(
                                   color: Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Tap untuk lebih detail',
+                                'Tap for more details',
                                 style: TextStyle(
                                   color: Colors.blue,
                                 ),

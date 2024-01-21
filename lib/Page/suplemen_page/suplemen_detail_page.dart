@@ -1,4 +1,5 @@
 import 'package:basic/Provider/MyProvider.dart';
+import 'package:basic/style/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:basic/Page/suplemen_page/SuplemenModel.dart';
@@ -15,43 +16,34 @@ class SuplemenDetailPage extends StatefulWidget {
 }
 
 class _SuplemenDetailPageState extends State<SuplemenDetailPage> {
-  int quantity = 1; // Initial quantity
+  int quantity = 1;
 
   Future _addToCart() async {
     try {
-      // Get the current user
       final uid = context.read<DataProfileProvider>().uid;
 
-      // Check if the user is signed in
       if (uid != null) {
-        // Assuming you have a users collection and a cart subcollection
         CollectionReference userCart = FirebaseFirestore.instance
             .collection('users')
             .doc(uid)
             .collection('cart');
-
-        // Add the product to the user's cart with quantity
         await userCart.add({
-          'namasuplemen': widget.suplemen
-              .namasuplemen, // Replace 'id' with your actual product ID property
+          'namasuplemen': widget.suplemen.namasuplemen,
           'jenissuplemen': widget.suplemen.jenissuplemen,
           'hargasuplemen': widget.suplemen.hargasuplemen,
           'gambarsuplemen': widget.suplemen.gambarsuplemen,
           'quantity': quantity
         });
 
-        // Display a success message or perform any other action
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Product added to cart'),
           ),
         );
       } else {
-        // The user is not signed in, handle this case accordingly
         print('User not signed in');
       }
     } catch (e) {
-      // Handle any errors that occur during the process
       print('Error adding to cart: $e');
     }
   }
@@ -61,8 +53,13 @@ class _SuplemenDetailPageState extends State<SuplemenDetailPage> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: colorbase,
       appBar: AppBar(
-        title: Text(widget.suplemen.namasuplemen),
+        backgroundColor: colorbase,
+        title: Text(
+          widget.suplemen.namasuplemen,
+          style: const TextStyle(color: Colors.white), // Ubah warna teks
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -80,24 +77,31 @@ class _SuplemenDetailPageState extends State<SuplemenDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Jenis: ${widget.suplemen.jenissuplemen}",
+                    "Type: ${widget.suplemen.jenissuplemen}",
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white), // Ubah warna teks
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Harga: ${widget.suplemen.hargasuplemen}",
-                    style: const TextStyle(fontSize: 16),
+                    "Price: ${widget.suplemen.hargasuplemen}",
+                    style: const TextStyle(
+                        fontSize: 16, color: Colors.white), // Ubah warna teks
                   ),
                   const SizedBox(height: 16),
                   const Text(
-                    "Deskripsi:",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    "description:",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white), // Ubah warna teks
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Tambahkan deskripsi produk suplemen di sini.",
-                    style: TextStyle(fontSize: 16),
+                  Text(
+                    widget.suplemen.deskripsi,
+                    style: const TextStyle(
+                        fontSize: 16, color: Colors.white), // Ubah warna teks
                   ),
                 ],
               ),
@@ -121,10 +125,12 @@ class _SuplemenDetailPageState extends State<SuplemenDetailPage> {
                       }
                     });
                   },
+                  color: Colors.white, // Ubah warna ikon
                 ),
                 Text(
                   '$quantity',
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                      fontSize: 16, color: Colors.white), // Ubah warna teks
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
@@ -133,6 +139,7 @@ class _SuplemenDetailPageState extends State<SuplemenDetailPage> {
                       quantity++;
                     });
                   },
+                  color: Colors.white, // Ubah warna ikon
                 ),
               ],
             ),
@@ -140,7 +147,13 @@ class _SuplemenDetailPageState extends State<SuplemenDetailPage> {
               onPressed: () {
                 _addToCart();
               },
-              child: const Text("Add to Cart"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white, // Ubah warna latar belakang
+              ),
+              child: const Text(
+                "Add to Cart",
+                style: TextStyle(color: colorbase), // Ubah warna teks
+              ),
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'package:basic/Page/TrainerPage/trainer_page.dart';
 import 'package:basic/Page/member_page/memberModel.dart';
 import 'package:basic/Page/member_page/membershipActive_page.dart';
-import 'package:basic/Page/schedule_page.dart';
+import 'package:basic/Page/Schedule_page/schedule_page.dart';
 import 'package:basic/Page/suplemen_page/suplemen_page.dart';
 import 'package:basic/Provider/MyProvider.dart';
 import 'package:basic/style/style.dart';
@@ -25,23 +25,23 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
       barrierDismissible: false, // user must tap button for close dialog
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Konfirmasi Pembelian'),
+          title: const Text('Confirm Purchase'),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Apakah Anda yakin ingin membeli paket member ini?'),
+                Text('Are you sure you want to buy this member package?'),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Batal'),
+              child: const Text('cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Beli'),
+              child: const Text('buy'),
               onPressed: () {
                 Navigator.of(context).pop();
                 buyMembership();
@@ -67,11 +67,10 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Pembelian paket member berhasil'),
+          content: Text('Member package purchase was successful'),
         ),
       );
 
-      // Perbarui list body di MainPage setelah pembelian
       final newBodyList = [
         const SchedulePage(),
         const TrainerPage(),
@@ -110,7 +109,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Text(
-                'Tipe Member: ${widget.member.tipemember}',
+                'Member Type: ${widget.member.tipemember}',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -120,7 +119,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Harga Member: ${widget.member.hargamember}/Bulan',
+              'Member Price: ${widget.member.hargamember}/Month',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -129,7 +128,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Deskripsi:',
+              'Description:',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -145,7 +144,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Benefit:',
+              'Benefits:',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -180,7 +179,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 await showConfirmationDialog();
                 Navigator.pop(context);
               },
-              child: const Text("Beli"),
+              child: const Text("Buy"),
             )
           ],
         ),

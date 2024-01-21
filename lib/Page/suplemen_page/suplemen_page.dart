@@ -85,36 +85,60 @@ class _SuplemenPageState extends State<SuplemenPage>
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.fromLTRB(
-                screenWidth * 0.1,
-                screenHeight * 0.02,
-                screenWidth * 0.1,
-                screenHeight * 0.02,
-              ),
-              child: TextField(
-                style: const TextStyle(color: Colors.white),
-                controller: searchController,
-                onChanged: (query) {
-                  filterSuplemen(query);
-                },
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  labelText: 'Search',
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Colors.white,
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.015,
-                    horizontal: screenWidth * 0.05,
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
+                    controller: searchController,
+                    onChanged: (query) {
+                      filterSuplemen(query);
+                    },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      labelText: 'Search',
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: screenHeight * 0.015,
+                        horizontal: screenWidth * 0.05,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(
+                    width: screenWidth *
+                        0.02), // Add spacing between the TextField and buttons
+                ElevatedButton(
+                  style: const ButtonStyle(),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Seller(),
+                      ),
+                    );
+                  },
+                  child: const Text("Sell Items"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CartScreen(),
+                      ),
+                    );
+                  },
+                  child: const Text("Cart"),
+                ),
+              ],
             ),
             Expanded(
               child: GridView.builder(
@@ -161,13 +185,13 @@ class _SuplemenPageState extends State<SuplemenPage>
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  "Jenis: ${suplemen.jenissuplemen}",
+                                  "Type: ${suplemen.jenissuplemen}",
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
                                 ),
                                 Text(
-                                  "Harga: ${suplemen.hargasuplemen}",
+                                  "Price: ${suplemen.hargasuplemen}",
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -182,36 +206,15 @@ class _SuplemenPageState extends State<SuplemenPage>
                 },
               ),
             ),
-            SizedBox(
-              height: screenHeight * 0.001,
+            SizedBox(height: screenHeight * 0.001),
+            const SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Seller(),
-                        ));
-                  },
-                  child: const Text("Jual Barang"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const CartScreen()));
-                  },
-                  child: const Text("Lihat Ke ranjang"),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: screenHeight * 0.001,
-            ),
+            SizedBox(height: screenHeight * 0.001),
           ],
         ),
       ),

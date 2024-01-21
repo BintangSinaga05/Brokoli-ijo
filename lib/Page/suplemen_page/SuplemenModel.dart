@@ -6,13 +6,15 @@ class EventModel {
   String jenissuplemen;
   int hargasuplemen;
   String gambarsuplemen;
+  String deskripsi;
 
   EventModel(
       {required this.id,
       required this.namasuplemen,
       required this.jenissuplemen,
       required this.hargasuplemen,
-      required this.gambarsuplemen});
+      required this.gambarsuplemen,
+      required this.deskripsi});
 
   Map<String, dynamic> toMap() {
     return {
@@ -20,6 +22,7 @@ class EventModel {
       'jenissuplemen': jenissuplemen,
       'hargasuplemen': hargasuplemen,
       'gambarsuplemen': gambarsuplemen,
+      'deskripsi': deskripsi
     };
   }
 
@@ -28,5 +31,6 @@ class EventModel {
         namasuplemen = doc.data()?['namasuplemen'],
         jenissuplemen = doc.data()?['jenissuplemen'],
         hargasuplemen = doc.data()?['hargasuplemen'],
-        gambarsuplemen = doc.data()?['gambarsuplemen'];
+        gambarsuplemen = doc.data()?['gambarsuplemen'],
+        deskripsi = doc.data()?['deskripsi'];
 }

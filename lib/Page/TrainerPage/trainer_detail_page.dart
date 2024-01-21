@@ -51,7 +51,7 @@ class _TrainerDetailPageState extends State<TrainerDetailPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Pengalaman: ${widget.trainer.pengalaman}',
+              'Age: ${widget.trainer.pengalaman} Year',
               style: const TextStyle(
                 color: Colors.white,
               ),

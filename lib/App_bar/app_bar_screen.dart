@@ -82,7 +82,7 @@ class _AppBarScreenState extends State<AppBarScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Suhu saat ini Di $city $temperature",
+            "Temperature at $city $temperature",
             style: const TextStyle(color: Colors.white38, fontSize: 18),
           ),
           Text(

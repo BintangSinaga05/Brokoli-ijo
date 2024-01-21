@@ -1,6 +1,6 @@
 import 'package:basic/Page/TrainerPage/trainer_page.dart';
 import 'package:basic/Page/member_page/member_page.dart';
-import 'package:basic/Page/schedule_page.dart';
+import 'package:basic/Page/Schedule_page/schedule_page.dart';
 import 'package:basic/Page/suplemen_page/suplemen_page.dart';
 import 'package:flutter/material.dart';
 

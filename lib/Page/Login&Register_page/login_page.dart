@@ -1,14 +1,14 @@
-import 'package:basic/Page/sign%20up_page.dart';
 import 'package:basic/Provider/MyProvider.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../main_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../main_page.dart';
+import '../sign up_page.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -18,10 +18,9 @@ class _LoginState extends State<Login> {
   late Map<String, dynamic> userData = {};
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool isLoggingIn = false;
 
-  Future<String?> _loginUser() async {
+  Future<void> _loginUser() async {
     setState(() {
       isLoggingIn = true;
     });
@@ -46,22 +45,36 @@ class _LoginState extends State<Login> {
         userData = userSnapshot.data() as Map<String, dynamic>;
       });
 
-      context.read<DataProfileProvider>().updateUserData(userData['username'],
-          userData['email'], userData['city'], userData['profilephoto']);
+      context.read<DataProfileProvider>().updateUserData(
+            userData['username'],
+            userData['email'],
+            userData['city'],
+            userData['profilephoto'],
+          );
 
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const MainPage()));
-      return 'login berhasil';
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+      );
+
+      Fluttertoast.showToast(
+        msg: 'Login berhasil',
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(
-          msg: error.message ?? "An Error occured", gravity: ToastGravity.TOP);
+        msg: error.message ?? "An Error occurred",
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
     } finally {
       setState(() {
         isLoggingIn = false;
       });
     }
-
-    return null;
   }
 
   @override
@@ -83,19 +96,19 @@ class _LoginState extends State<Login> {
           Center(
             child: Container(
               width: screenWidth * 0.8,
-              height: screenHeight * 0.6,
+              height: screenHeight * 0.8,
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Scaffold(
                 backgroundColor: Colors.transparent,
-                body: SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.05,
-                      vertical: screenHeight * 0.1,
-                    ),
+                body: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.05,
+                    vertical: screenHeight * 0.1,
+                  ),
+                  child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -135,45 +148,39 @@ class _LoginState extends State<Login> {
                         Column(
                           children: [
                             SizedBox(
-                                width: screenWidth * 0.7,
-                                height: screenHeight * 0.06,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    String? loginStatus = await _loginUser();
-                                    if (loginStatus != null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(loginStatus),
-                                          duration: const Duration(seconds: 10),
+                              width: screenWidth * 0.7,
+                              height: screenHeight * 0.06,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  await _loginUser();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.white,
+                                ),
+                                child: isLoggingIn
+                                    ? const CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.black),
+                                      )
+                                    : const Text(
+                                        'Sign',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black,
                                         ),
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                    backgroundColor: Colors.white,
-                                  ),
-                                  child: isLoggingIn
-                                      ? const CircularProgressIndicator(
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.black),
-                                        )
-                                      : const Text(
-                                          'Sign',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                )),
+                                      ),
+                              ),
+                            ),
                             TextButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => const SignUp()));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignUp(),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 "Back",
